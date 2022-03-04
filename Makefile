@@ -1,7 +1,7 @@
 export PROJNAME := stdlib
 export RESULT := libstd.so
 export asm := yes
-export shared := yes
+export lib := yes
 export nostdlib := true
 
 all: $(RESULT)
