@@ -6,4 +6,7 @@
 
 typedef size_t PID;
 
+// Bochs breakpoint for debugging
+inline void bochsbrk() { asm volatile("xchgw %bx, %bx"); }
+
 #endif

@@ -7,6 +7,7 @@ global memset
 memmove: ; :p, probably not right
 memcpy:
     mov rcx, rdx
+    cld
     rep movsb
     mov rax, rdi
     ret
@@ -14,6 +15,7 @@ memcpy:
 memset:
     mov rax, rsi
     mov rcx, rdx
+    cld
     rep stosb
     mov rax, rdi
     ret
