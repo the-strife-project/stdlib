@@ -9,6 +9,8 @@ namespace std {
 		enum {
 			SEGFAULT, // Access to non-mapped memory
 			BAD_STRING, // Process sent the kernel an invalid string
+			LOADER_SYSCALL, // Tried to use a loader-only syscall
+			UNKNOWN_SYSCALL
 		};
 	};
 };
