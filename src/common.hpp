@@ -4,9 +4,13 @@
 #include <stdint.h>
 #include <stddef.h>
 
-typedef size_t PID;
+typedef unsigned short PID;
+typedef size_t RPID;
 
 // Bochs breakpoint for debugging
 inline void bochsbrk() { asm volatile("xchgw %bx, %bx"); }
+
+#define IGNORE(x) ((void)x)
+#define HALT_AND_CATCH_FIRE() (*(uint64_t*)0 = 0)
 
 #endif
