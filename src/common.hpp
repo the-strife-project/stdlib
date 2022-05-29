@@ -4,8 +4,11 @@
 #include <stdint.h>
 #include <stddef.h>
 
-typedef unsigned short PID;
-typedef size_t RPID;
+namespace std {
+	typedef unsigned short PID;
+	typedef size_t RPID;
+	typedef size_t SMID;
+}
 
 // Bochs breakpoint for debugging
 inline void bochsbrk() { asm volatile("xchgw %bx, %bx"); }

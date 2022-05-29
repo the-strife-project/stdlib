@@ -17,6 +17,6 @@ bool std::publish(const std::string& name) {
 	return _syscallOne(Syscalls::PUBLISH, str2u64(name));
 }
 
-PID std::resolve(const std::string& name) {
+std::PID std::resolve(const std::string& name) {
 	return _syscallOne(Syscalls::RESOLVE, str2u64(name));
 }

@@ -13,20 +13,37 @@ namespace std {
 			EXIT,
 			MORE_HEAP,
 			MMAP,
+			// Loader only
 			MAKE_PROCESS,
 			ASLR_GET,
 			MAP_IN,
 			BACK_FROM_LOADER,
+			// PSNS
 			PUBLISH,
 			RESOLVE,
+			// RPC
 			HALT,
 			RPC,
 			ENABLE_RPC,
-			RPC_MORE_STACKS
+			RPC_MORE_STACKS, // Kernel only
+			// Shared memory
+			SM_MAKE,
+			SM_ALLOW,
+			SM_REQUEST,
+			SM_MAP
 		};
 	};
 
 	// Generic functions for syscalls
+	inline uint64_t _syscallZero(uint64_t id) {
+		uint64_t ret;
+		asm volatile("syscall"
+					 : "=a" (ret)
+					 : "D" (id)
+					 : SYSCALL_CLOBBER);
+		return ret;
+	}
+
 	inline uint64_t _syscallOne(uint64_t id, uint64_t arg1) {
 		uint64_t ret;
 		asm volatile("syscall"
@@ -44,6 +61,19 @@ namespace std {
 					 : "D" (id),
 					   "S" (arg1),
 					   "d" (arg2)
+					 : SYSCALL_CLOBBER);
+		return ret;
+	}
+
+	inline uint64_t _syscallThree(uint64_t id, uint64_t arg1, uint64_t arg2, uint64_t arg3) {
+		uint64_t ret;
+		register size_t r10 asm("r10") = arg3;
+		asm volatile("syscall"
+					 : "=a" (ret)
+					 : "D" (id),
+					   "S" (arg1),
+					   "d" (arg2),
+					   "r" (r10)
 					 : SYSCALL_CLOBBER);
 		return ret;
 	}
@@ -93,81 +123,6 @@ namespace std {
 					 : "D" (Syscalls::ENABLE_RPC),
 					   "S" (entry)
 					 : SYSCALL_CLOBBER);
-	}
-	// Client
-	// How many arguments though 🤔
-	// It's better to create a function for each possibility, so GCC
-	//   can handle registers better.
-	// Zero args
-	inline uint64_t rpc(PID remote, RPID id) {
-		uint64_t ret;
-		asm volatile("syscall"
-					 : "=a" (ret)
-					 : "a" (remote),
-					   "D" (Syscalls::RPC),
-					   "S" (id)
-					 : SYSCALL_CLOBBER);
-		return ret;
-	}
-	// One argument
-	inline uint64_t rpc(PID remote, RPID id, size_t a) {
-		uint64_t ret;
-		asm volatile("syscall"
-					 : "=a" (ret)
-					 : "a" (remote),
-					   "D" (Syscalls::RPC),
-					   "S" (id),
-					   "d" (a)
-					 : SYSCALL_CLOBBER);
-		return ret;
-	}
-	// Two arguments
-	inline uint64_t rpc(PID remote, RPID id, size_t a, size_t b) {
-		uint64_t ret;
-		register size_t r10 asm("r10") = b;
-		asm volatile("syscall"
-					 : "=a" (ret)
-					 : "a" (remote),
-					   "D" (Syscalls::RPC),
-					   "S" (id),
-					   "d" (a),
-					   "r" (r10)
-					 : SYSCALL_CLOBBER);
-		return ret;
-	}
-	// Three arguments
-	inline uint64_t rpc(PID remote, RPID id, size_t a, size_t b, size_t c) {
-		uint64_t ret;
-		register size_t r10 asm("r10") = b;
-		register size_t r8 asm("r8") = c;
-		asm volatile("syscall"
-					 : "=a" (ret)
-					 : "a" (remote),
-					   "D" (Syscalls::RPC),
-					   "S" (id),
-					   "d" (a),
-					   "r" (r10),
-					   "r" (r8)
-					 : SYSCALL_CLOBBER);
-		return ret;
-	}
-	// Four arguments
-	inline uint64_t rpc(PID remote, RPID id, size_t a, size_t b, size_t c, size_t d) {
-		uint64_t ret;
-		register size_t r10 asm("r10") = b;
-		register size_t r8 asm("r8") = c;
-		register size_t r9 asm("r9") = d;
-		asm volatile("syscall"
-					 : "=a" (ret)
-					 : "a" (remote),
-					   "D" (Syscalls::RPC),
-					   "S" (id),
-					   "d" (a),
-					   "r" (r10),
-					   "r" (r8),
-					   "r" (r9)
-					 : SYSCALL_CLOBBER);
-		return ret;
 	}
 };
 
