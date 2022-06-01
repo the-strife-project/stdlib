@@ -30,7 +30,9 @@ namespace std {
 			SM_MAKE,
 			SM_ALLOW,
 			SM_REQUEST,
-			SM_MAP
+			SM_MAP,
+			// Other stuff
+			GET_IO,
 		};
 	};
 
@@ -123,6 +125,11 @@ namespace std {
 					 : "D" (Syscalls::ENABLE_RPC),
 					   "S" (entry)
 					 : SYSCALL_CLOBBER);
+	}
+
+	// --- OTHER ---
+	inline size_t getIO() {
+		return _syscallZero(Syscalls::GET_IO);
 	}
 };
 
