@@ -33,6 +33,8 @@ namespace std {
 			SM_MAP,
 			// Other stuff
 			GET_IO,
+			GET_PHYS,
+			MAP_PHYS,
 		};
 	};
 
@@ -128,8 +130,20 @@ namespace std {
 	}
 
 	// --- OTHER ---
-	inline size_t getIO() {
-		return _syscallZero(Syscalls::GET_IO);
+	inline size_t getIO() { return _syscallZero(Syscalls::GET_IO); }
+	inline uint64_t getPhys(uint64_t x) {
+		return _syscallOne(Syscalls::GET_PHYS, x);
+	}
+
+	const bool MAP_PHYS_WRITE = true;
+	const bool MAP_PHYS_RO = false;
+	const bool MAP_PHYS_DONT_CACHE = true;
+	const bool MAP_PHYS_CACHE = false;
+	inline size_t mapPhys(size_t phys, size_t npages=1, bool write=true, size_t noCache=false) {
+		size_t prot = 0;
+		if(write) prot |= 0b1;
+		if(noCache) prot |= 0b10;
+		return _syscallThree(Syscalls::MAP_PHYS, phys, npages, prot);
 	}
 };
 
