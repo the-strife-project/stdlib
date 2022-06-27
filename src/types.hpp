@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define PAGE_SIZE 4096
+
 namespace std {
 	typedef unsigned short PID;
 	typedef size_t RPID;
