@@ -19,8 +19,7 @@ namespace std {
 			MAP_IN,
 			BACK_FROM_LOADER,
 			// PSNS
-			PUBLISH,
-			RESOLVE,
+			FIND_PSNS,
 			// RPC
 			HALT,
 			RPC,
