@@ -19,6 +19,12 @@ namespace std {
 	inline void* smMap(SMID smid) {
 		return (void*)_syscallOne(Syscalls::SM_MAP, smid);
 	}
+
+	// Abstraction
+	namespace sm {
+		bool connect(PID pid, SMID smid);
+		uint8_t* get(PID pid);
+	};
 };
 
 #endif

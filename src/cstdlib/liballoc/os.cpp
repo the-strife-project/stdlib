@@ -1,10 +1,13 @@
 #include "liballoc_1_1.h"
 #include "../PageAlloc/PageAlloc.hpp"
+#include <mutex>
 
 // OS-dependent things for liballoc
 
-int liballoc_lock() { return 0; } // TODO
-int liballoc_unlock() { return 0; }
+static std::mutex lock;
+
+int liballoc_lock() { lock.acquire(); return 0; }
+int liballoc_unlock() { lock.release(); return 0; }
 
 void* liballoc_alloc(size_t npages) { return __allocp(npages); }
 

@@ -1,10 +1,13 @@
 #include <cstdio>
 #include <shared_memory>
 #include <rpc>
+#include <mutex>
 
 size_t std::_buffered = 0;
 char* std::_bufferedOut = nullptr;
 std::PID std::_term = 0;
+
+static std::mutex lock;
 
 static void _writec(char c) {
 	std::_bufferedOut[std::_buffered++] = c;
@@ -21,7 +24,7 @@ static inline size_t _writes(const char* str) {
 }
 
 size_t std::printf(const char* fmt, ...) {
-	// TODO: Maybe a lock here?
+	lock.acquire();
 	if(!std::_bufferedOut) {
 		// Initialize shared memory with term
 		std::SMID smid = std::smMake();
@@ -64,5 +67,6 @@ size_t std::printf(const char* fmt, ...) {
 		}
 	}
 
+	lock.release();
 	return 0;
 }
