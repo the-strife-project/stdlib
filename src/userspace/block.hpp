@@ -9,6 +9,15 @@ namespace std {
 			CONNECT,
 			LIST_DEVICES,
 			READ,
+			WRITE,
+		};
+
+		struct DeviceTypes {
+			enum {
+				NONE,
+				AHCIATAPI,
+				RAMBLOCK,
+			};
 		};
 	};
 };

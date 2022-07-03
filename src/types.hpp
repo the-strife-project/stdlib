@@ -24,5 +24,6 @@ inline void bochsbrk() { asm volatile("xchgw %bx, %bx"); }
 
 #define IGNORE(x) ((void)x)
 #define HALT_AND_CATCH_FIRE() (*(uint64_t*)0 = 0)
+#define fallthrough __attribute__((__fallthrough__))
 
 #endif

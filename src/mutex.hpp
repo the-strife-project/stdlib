@@ -28,6 +28,8 @@ namespace std {
 
 		inline void lock() { acquire(); }
 		inline void unlock() { release(); }
+
+		inline bool isAcquired() { return x; }
 	};
 };
 
