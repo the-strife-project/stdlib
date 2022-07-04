@@ -9,6 +9,8 @@ namespace std {
 			GET_INODE,
 			READ,
 			WRITE,
+			MAKE_FILE,
+			MAKE_DIR,
 		};
 	};
 };
