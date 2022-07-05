@@ -30,12 +30,22 @@ namespace std {
 			SM_ALLOW,
 			SM_REQUEST,
 			SM_MAP,
-			// Other stuff
-			GET_IO,
+			// Special permissions
+			ALLOW_IO,
+			ALLOW_PHYS,
 			GET_PHYS,
 			MAP_PHYS,
+			// Task-related
+			EXEC,
+			GET_LAST_LOADER_ERROR,
+			GET_KILL_REASON,
+			GET_EXIT_VALUE,
 		};
 	};
+
+	// From this point onwards, this file gets very little interesting
+
+
 
 	// Generic functions for syscalls
 	inline uint64_t _syscallZero(uint64_t id) {
@@ -83,6 +93,7 @@ namespace std {
 
 
 
+	// Beginning actual syscalls
 	[[noreturn]] inline void exit(size_t val) {
 		asm volatile("syscall"
 					 :
@@ -114,8 +125,9 @@ namespace std {
 		while(true);
 	}
 
-	// --- RPC ---
-	// Server
+
+
+	// --- RPC SERVER ---
 	uint64_t rpcHandler(PID client, RPID id, uint64_t arg0, uint64_t arg1,
 						uint64_t arg2, uint64_t arg3);
 	// No std::exportProcedure calls after enabling RPC!
@@ -128,8 +140,12 @@ namespace std {
 					 : SYSCALL_CLOBBER);
 	}
 
-	// --- OTHER ---
-	inline size_t getIO() { return _syscallZero(Syscalls::GET_IO); }
+
+
+	// --- SPECIAL PERMISSIONS ---
+	inline size_t allowIO() { return _syscallZero(Syscalls::ALLOW_IO); }
+	inline size_t allowPhys() { return _syscallZero(Syscalls::ALLOW_PHYS); }
+
 	inline uint64_t getPhys(uint64_t x) {
 		return _syscallOne(Syscalls::GET_PHYS, x);
 	}
@@ -143,6 +159,20 @@ namespace std {
 		if(write) prot |= 0b1;
 		if(noCache) prot |= 0b10;
 		return _syscallThree(Syscalls::MAP_PHYS, phys, npages, prot);
+	}
+
+
+
+	// --- TASK-RELATED ---
+	//inline bool exec();
+	inline size_t getLastLoaderError() {
+		return _syscallZero(Syscalls::GET_LAST_LOADER_ERROR);
+	}
+	inline size_t getKillReason(PID pid) {
+		return _syscallOne(Syscalls::GET_KILL_REASON, pid);
+	}
+	inline size_t getExitValue(PID pid) {
+		return _syscallOne(Syscalls::GET_EXIT_VALUE, pid);
 	}
 };
 

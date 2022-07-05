@@ -25,7 +25,7 @@ bool std::sm::connect(PID pid, std::SMID smid) {
 
 uint8_t* std::sm::get(PID pid) {
 	lock.acquire();
-	if(shared.find(pid) == shared.end()) {
+	if(!shared.has(pid)) {
 		lock.release();
 		return nullptr;
 	}
