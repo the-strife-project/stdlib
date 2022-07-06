@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 #define PAGE_SIZE 4096
+#define NULL_PID 0
 
 namespace std {
 	typedef unsigned short PID;

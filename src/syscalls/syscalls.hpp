@@ -40,6 +40,7 @@ namespace std {
 			GET_LAST_LOADER_ERROR,
 			GET_KILL_REASON,
 			GET_EXIT_VALUE,
+			WAIT,
 		};
 	};
 
@@ -164,7 +165,10 @@ namespace std {
 
 
 	// --- TASK-RELATED ---
-	//inline bool exec();
+	// The underscore is not to confuse it with run() by mistake
+	inline PID _exec(void* buffer, size_t sz) {
+		return _syscallTwo(Syscalls::EXEC, (uint64_t)buffer, sz);
+	}
 	inline size_t getLastLoaderError() {
 		return _syscallZero(Syscalls::GET_LAST_LOADER_ERROR);
 	}
@@ -173,6 +177,9 @@ namespace std {
 	}
 	inline size_t getExitValue(PID pid) {
 		return _syscallOne(Syscalls::GET_EXIT_VALUE, pid);
+	}
+	inline void wait(PID pid) {
+		_syscallOne(Syscalls::WAIT, pid);
 	}
 };
 
