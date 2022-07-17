@@ -7,6 +7,9 @@
 #define PAGE_SIZE 4096
 #define NULL_PID 0
 
+#define PAGE(x) ((x) & ~0xFFF)
+#define PAGEOFF(x) ((x) & 0xFFF)
+
 namespace std {
 	typedef unsigned short PID;
 	typedef size_t RPID;

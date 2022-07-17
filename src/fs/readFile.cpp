@@ -1,5 +1,6 @@
 #include "fs.hpp"
 #include <rpc>
+#include <shared_memory>
 
 size_t std::readFile(const std::string& path, uint8_t* data, size_t start, size_t sz) {
 	if(!_fs_isSelected || path != _fs_selected) {
@@ -13,12 +14,19 @@ size_t std::readFile(const std::string& path, uint8_t* data, size_t start, size_
 	size_t page = start / PAGE_SIZE;
 	size_t off = start % PAGE_SIZE;
 
+	std::SMID smid = std::smMake();
+	uint8_t* buffer = (uint8_t*)std::smMap(smid);
+	std::smAllow(smid, _fs_vfs);
+
 	while(npages--) {
-		if(!rpc(_fs_vfs, std::VFS::READ, page))
+		if(!rpc(_fs_vfs, std::VFS::READ, smid, page)) {
+			std::munmap(buffer);
+			std::smDrop(smid);
 			return std::VFS::ERROR_READING;
+		}
 
 		size_t copy = std::min(PAGE_SIZE - off, sz);
-		memcpy(ptr, _fs_shared+off, copy);
+		memcpy(ptr, buffer+off, copy);
 
 		off = 0;
 		++page;
@@ -26,6 +34,8 @@ size_t std::readFile(const std::string& path, uint8_t* data, size_t start, size_
 		sz -= copy;
 	}
 
+	std::munmap(buffer);
+	std::smDrop(smid);
 	return std::FS_OK;
 }
 
@@ -36,15 +46,26 @@ size_t std::readWholeFile(const std::string& path, std::Buffer& ref) {
 			return sel;
 	}
 
-	if(!std::rpc(_fs_vfs, std::VFS::INFO))
+	std::SMID smid = std::smMake();
+	uint8_t* buffer = (uint8_t*)std::smMap(smid);
+	std::smAllow(smid, _fs_vfs);
+
+	if(!std::rpc(_fs_vfs, std::VFS::INFO, smid)) {
+		std::munmap(buffer);
+		std::smDrop(smid);
 		return std::VFS::ERROR_READING;
+	}
 
 	std::VFS::Info info;
-	memcpy(&info, _fs_shared, sizeof(info));
+	memcpy(&info, buffer, sizeof(info));
 	size_t size = info.size;
 
-	Buffer buffer = {new uint8_t[size], size};
-	readFile(path, buffer.get(), 0, size);
-	ref = buffer;
+	std::munmap(buffer);
+	std::smDrop(smid);
+
+	Buffer buff = {new uint8_t[size], size};
+	readFile(path, buff.get(), 0, size);
+	ref = buff;
+
 	return std::FS_OK;
 }

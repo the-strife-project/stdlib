@@ -32,7 +32,7 @@ size_t std::printf(const char* fmt, ...) {
 
 		std::_term = std::resolve("term");
 		std::smAllow(smid, std::_term);
-		std::rpc(std::_term, _STDLIB_TERM_ID_CONNECT, smid);
+		std::rpc(std::_term, std::term::CONNECT, smid);
 	}
 
 	va_list args;

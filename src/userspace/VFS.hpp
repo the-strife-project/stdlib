@@ -4,11 +4,13 @@
 namespace std {
 	struct VFS {
 		enum {
-			CONNECT,
 			SELECT,
+			LIST_SIZE,
 			LIST,
 			READ,
 			INFO,
+			MAKE_FILE,
+			MAKE_DIR,
 		};
 
 		enum {

@@ -13,6 +13,7 @@ namespace std {
 			EXIT,
 			MORE_HEAP,
 			MMAP,
+			MUNMAP,
 			// Loader only
 			MAKE_PROCESS,
 			ASLR_GET,
@@ -29,6 +30,8 @@ namespace std {
 			SM_MAKE,
 			SM_ALLOW,
 			SM_REQUEST,
+			SM_GETSIZE,
+			SM_DROP,
 			SM_MAP,
 			// Special permissions
 			ALLOW_IO,
@@ -36,11 +39,16 @@ namespace std {
 			GET_PHYS,
 			MAP_PHYS,
 			// Task-related
+			GET_PID,
+			GET_ORIG_PID,
 			EXEC,
 			GET_LAST_LOADER_ERROR,
 			GET_KILL_REASON,
 			GET_EXIT_VALUE,
 			WAIT,
+			// Locks
+			LOCK,
+			WAKE,
 		};
 	};
 
@@ -116,6 +124,10 @@ namespace std {
 		return (void*)_syscallTwo(Syscalls::MMAP, npages, prot);
 	}
 
+	inline void munmap(void* ptr, size_t npages=1) {
+		_syscallTwo(Syscalls::MUNMAP, (uint64_t)ptr, npages);
+	}
+
 	bool publish(const std::string& name);
 	PID resolve(const std::string& name);
 
@@ -165,6 +177,8 @@ namespace std {
 
 
 	// --- TASK-RELATED ---
+	inline PID getPID() { return _syscallZero(Syscalls::GET_PID); }
+	inline PID getOrigPID() { return _syscallZero(Syscalls::GET_ORIG_PID); }
 	// The underscore is not to confuse it with run() by mistake
 	inline PID _exec(void* buffer, size_t sz) {
 		return _syscallTwo(Syscalls::EXEC, (uint64_t)buffer, sz);
@@ -181,6 +195,12 @@ namespace std {
 	inline void wait(PID pid) {
 		_syscallOne(Syscalls::WAIT, pid);
 	}
+
+
+
+	// --- LOCKS ---
+	inline void lockme() { _syscallZero(Syscalls::LOCK); }
+	inline bool wake(std::PID pid) { return _syscallOne(Syscalls::WAKE, pid); }
 };
 
 #endif

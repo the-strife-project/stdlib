@@ -12,12 +12,15 @@ namespace std {
 
 	// Private-ish
 	extern std::PID _fs_vfs;
-	extern char* _fs_shared;
 	extern bool _fs_isSelected;
 	extern std::string _fs_selected;
 	size_t _fs_select(const std::string&);
 
 	// Regular
+	inline bool existsFile(const std::string& path) {
+		return _fs_select(path) == VFS::SELECT_OK;
+	}
+
 	size_t listFiles(const std::string&, FileList&);
 	size_t readFile(const std::string&, uint8_t*, size_t start, size_t sz);
 	size_t readWholeFile(const std::string&, Buffer&);

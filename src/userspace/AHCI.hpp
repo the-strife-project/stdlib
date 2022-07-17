@@ -7,7 +7,6 @@ namespace std {
 	struct AHCI {
 		enum {
 			GET_ATAPIS,
-			CONNECT,
 			READ_ATAPI,
 		};
 	};

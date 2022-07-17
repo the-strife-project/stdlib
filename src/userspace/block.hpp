@@ -6,8 +6,8 @@
 namespace std {
 	struct block {
 		enum {
-			CONNECT,
 			LIST_DEVICES,
+			SELECT,
 			READ,
 			WRITE,
 		};

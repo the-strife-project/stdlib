@@ -7,8 +7,8 @@ namespace std {
 	struct ISO9660 {
 		enum {
 			SETUP,
-			CONNECT,
 			GET_ROOT,
+			LIST_SIZE,
 			LIST,
 			READ,
 		};

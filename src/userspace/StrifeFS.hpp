@@ -5,7 +5,6 @@ namespace std {
 	struct StrifeFS {
 		enum {
 			SETUP,
-			CONNECT,
 			GET_INODE,
 			READ,
 			WRITE,

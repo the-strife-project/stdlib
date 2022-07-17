@@ -6,7 +6,6 @@
 namespace std {
 	struct ramblock {
 		enum {
-			CONNECT,
 			READ,
 			WRITE,
 		};

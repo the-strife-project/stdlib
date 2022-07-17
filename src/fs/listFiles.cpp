@@ -1,7 +1,6 @@
 #include "fs.hpp"
 #include <rpc>
-
-// I'm not proud of this at all
+#include <shared_memory>
 
 size_t std::listFiles(const std::string& path, FileList& ret) {
 	if(!_fs_isSelected || path != _fs_selected) {
@@ -10,26 +9,20 @@ size_t std::listFiles(const std::string& path, FileList& ret) {
 			return sel;
 	}
 
-	std::list<uint8_t*> pages;
-	while(true) {
-		if(!std::rpc(_fs_vfs, std::VFS::LIST, pages.size()))
-			break;
+	size_t npages = std::rpc(_fs_vfs, std::VFS::LIST_SIZE);
 
-		uint8_t* page = new uint8_t[PAGE_SIZE];
-		memcpy(page, _fs_shared, PAGE_SIZE);
-		pages.push_back(page);
+	std::SMID smid = std::smMake(npages);
+	uint8_t* buffer = (uint8_t*)std::smMap(smid);
+	std::smAllow(smid, _fs_vfs);
+
+	if(!std::rpc(_fs_vfs, std::VFS::LIST, smid)) {
+		std::munmap(buffer, npages);
+		std::smDrop(smid);
+		return 0;
 	}
 
-	uint8_t* data = new uint8_t[pages.size() * PAGE_SIZE];
-	uint8_t* ptr = data;
-	for(auto const& x : pages) {
-		memcpy(ptr, x, PAGE_SIZE);
-		delete [] x;
-	}
-
-	// We finally got data
-	ptr = data;
-	while(ptr < data + pages.size() * PAGE_SIZE) {
+	uint8_t* ptr = buffer;
+	while(ptr < buffer + npages * PAGE_SIZE) {
 		uint64_t inode = *(uint64_t*)ptr;
 		ptr += sizeof(uint64_t);
 

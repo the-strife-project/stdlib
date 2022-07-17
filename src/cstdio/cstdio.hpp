@@ -3,9 +3,7 @@
 
 #include <stdarg.h>
 #include <rpc>
-
-#define _STDLIB_TERM_ID_CONNECT 0
-#define _STDLIB_TERM_ID_FLUSH 1
+#include <userspace/term.hpp>
 
 namespace std {
 	extern size_t _buffered;
@@ -13,10 +11,12 @@ namespace std {
 	extern std::PID _term;
 
 	inline size_t flushTerm() {
-		size_t ret = rpc(std::_term, _STDLIB_TERM_ID_FLUSH, std::_buffered);
+		size_t ret = rpc(std::_term, std::term::FLUSH, std::_buffered);
 		std::_buffered = 0;
 		return ret;
 	}
+
+	inline void clearTerm() { rpc(std::_term, std::term::CLEAR); }
 
 	size_t printf(const char* fmt, ...);
 
