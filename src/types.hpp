@@ -9,6 +9,7 @@
 
 #define PAGE(x) ((x) & ~0xFFF)
 #define PAGEOFF(x) ((x) & 0xFFF)
+#define NPAGES(x) (((x) + PAGE_SIZE - 1) / PAGE_SIZE)
 
 namespace std {
 	typedef unsigned short PID;

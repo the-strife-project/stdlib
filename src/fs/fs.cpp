@@ -20,10 +20,10 @@ std::string std::_fs_selected;
 
 size_t std::_fs_select(const std::string& path) {
 	if(!_resolve())
-		return false;
+		return std::VFS::SELECT_CONNECT_ERROR;
 
 	if(path.size() >= PAGE_SIZE)
-		return false;
+		return std::VFS::SELECT_CONNECT_ERROR;
 
 	std::SMID smid = std::smMake();
 	uint8_t* buffer = (uint8_t*)std::smMap(smid);

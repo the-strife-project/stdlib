@@ -3,7 +3,7 @@
 #include <shared_memory>
 
 size_t std::listFiles(const std::string& path, FileList& ret) {
-	if(!_fs_isSelected || path != _fs_selected) {
+	if(!_fs_isSelected || path + "/" != _fs_selected) {
 		size_t sel = _fs_select(path + "/");
 		if(sel != std::VFS::SELECT_OK)
 			return sel;

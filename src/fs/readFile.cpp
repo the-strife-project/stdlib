@@ -10,9 +10,9 @@ size_t std::readFile(const std::string& path, uint8_t* data, size_t start, size_
 	}
 
 	uint8_t* ptr = data;
-	size_t npages = (sz + PAGE_SIZE - 1) / PAGE_SIZE;
-	size_t page = start / PAGE_SIZE;
-	size_t off = start % PAGE_SIZE;
+	size_t npages = NPAGES(sz);
+	size_t page = PAGE(start);
+	size_t off = PAGEOFF(start);
 
 	std::SMID smid = std::smMake();
 	uint8_t* buffer = (uint8_t*)std::smMap(smid);
@@ -56,9 +56,8 @@ size_t std::readWholeFile(const std::string& path, std::Buffer& ref) {
 		return std::VFS::ERROR_READING;
 	}
 
-	std::VFS::Info info;
-	memcpy(&info, buffer, sizeof(info));
-	size_t size = info.size;
+	auto* info = (std::VFS::Info*)buffer;
+	size_t size = info->size;
 
 	std::munmap(buffer);
 	std::smDrop(smid);

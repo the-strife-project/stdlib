@@ -17,9 +17,14 @@ namespace std {
 	size_t _fs_select(const std::string&);
 
 	// Regular
-	inline bool existsFile(const std::string& path) {
+	inline bool exists(const std::string& path) {
 		return _fs_select(path) == VFS::SELECT_OK;
 	}
+
+	std::string simplifyPath(const std::string&);
+
+	bool isFile(const std::string&);
+	bool isDir(const std::string&);
 
 	size_t listFiles(const std::string&, FileList&);
 	size_t readFile(const std::string&, uint8_t*, size_t start, size_t sz);

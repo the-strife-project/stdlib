@@ -100,10 +100,25 @@ namespace std {
 		return ret;
 	}
 
+	inline uint64_t _syscallFour(uint64_t id, uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4) {
+		uint64_t ret;
+		register size_t r10 asm("r10") = arg3;
+		register size_t r8 asm("r8") = arg4;
+		asm volatile("syscall"
+					 : "=a" (ret)
+					 : "D" (id),
+					   "S" (arg1),
+					   "d" (arg2),
+					   "r" (r10),
+					   "r" (r8)
+					 : SYSCALL_CLOBBER);
+		return ret;
+	}
+
 
 
 	// Beginning actual syscalls
-	[[noreturn]] inline void exit(size_t val) {
+	[[noreturn]] inline void exit(size_t val=0) {
 		asm volatile("syscall"
 					 :
 					 : "D" (Syscalls::EXIT),
@@ -180,8 +195,12 @@ namespace std {
 	inline PID getPID() { return _syscallZero(Syscalls::GET_PID); }
 	inline PID getOrigPID() { return _syscallZero(Syscalls::GET_ORIG_PID); }
 	// The underscore is not to confuse it with run() by mistake
-	inline PID _exec(void* buffer, size_t sz) {
-		return _syscallTwo(Syscalls::EXEC, (uint64_t)buffer, sz);
+	inline PID _exec(void* buffer, size_t sz, void* runtime, size_t rtsz) {
+		return _syscallFour(Syscalls::EXEC,
+							(uint64_t)buffer,
+							sz,
+							(uint64_t)runtime,
+							rtsz);
 	}
 	inline size_t getLastLoaderError() {
 		return _syscallZero(Syscalls::GET_LAST_LOADER_ERROR);
