@@ -6,6 +6,8 @@ namespace std {
 		enum {
 			EXISTS,
 			CREATE,
+			LIST_SIZE,
+			LIST,
 		};
 
 		enum {

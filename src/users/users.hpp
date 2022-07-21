@@ -9,6 +9,8 @@ namespace std {
 
 	std::string uidToName(size_t);
 	size_t nameToUID(std::string&);
+	size_t howManyUsers();
+	size_t newUser(std::string&);
 };
 
 #endif

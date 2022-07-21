@@ -6,6 +6,7 @@ namespace std {
 		enum {
 			GET_UID,
 			GET_NAME,
+			GET_COUNT,
 			NEW_USER,
 		};
 	};
