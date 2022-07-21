@@ -1,7 +1,7 @@
 #ifndef _STDLIB_SYSCALLS_HPP
 #define _STDLIB_SYSCALLS_HPP
 
-#define SYSCALL_CLOBBER "cc", "rcx", "r11"
+#define SYSCALL_CLOBBER "cc", "memory", "rcx", "r11"
 
 #include <types>
 #include <string>
@@ -46,6 +46,7 @@ namespace std {
 			GET_KILL_REASON,
 			GET_EXIT_VALUE,
 			WAIT,
+			INFO,
 			// Locks
 			LOCK,
 			WAKE,
@@ -213,6 +214,19 @@ namespace std {
 	}
 	inline void wait(PID pid) {
 		_syscallOne(Syscalls::WAIT, pid);
+	}
+
+	struct Info {
+		PID pid = 0;
+		size_t uid = 0;
+		size_t mem = 0;
+	};
+	inline Info info(PID pid) {
+		void* page = mmap();
+		_syscallTwo(Syscalls::INFO, pid, (uint64_t)page);
+		Info ret = *(Info*)page;
+		munmap(page);
+		return ret;
 	}
 
 

@@ -5,7 +5,7 @@
 size_t std::listFiles(const std::string& path, FileList& ret) {
 	if(!_fs_isSelected || path + "/" != _fs_selected) {
 		size_t sel = _fs_select(path + "/");
-		if(sel != std::VFS::SELECT_OK)
+		if(sel != std::VFS::OK)
 			return sel;
 	}
 

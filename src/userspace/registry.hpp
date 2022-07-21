@@ -4,7 +4,6 @@
 namespace std {
 	struct uregistry {
 		enum {
-			CONNECT,
 			EXISTS,
 			CREATE,
 		};
@@ -12,7 +11,7 @@ namespace std {
 		enum {
 			OK,
 			CONNECTION_ERROR,
-			BADLY_FORMED, // borrame
+			NOT_ALLOWED,
 			NOT_FOUND,
 		};
 	};

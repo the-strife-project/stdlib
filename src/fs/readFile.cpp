@@ -5,7 +5,7 @@
 size_t std::readFile(const std::string& path, uint8_t* data, size_t start, size_t sz) {
 	if(!_fs_isSelected || path != _fs_selected) {
 		size_t sel = _fs_select(path);
-		if(sel != std::VFS::SELECT_OK)
+		if(sel != std::VFS::OK)
 			return sel;
 	}
 
@@ -42,7 +42,7 @@ size_t std::readFile(const std::string& path, uint8_t* data, size_t start, size_
 size_t std::readWholeFile(const std::string& path, std::Buffer& ref) {
 	if(!_fs_isSelected || path != _fs_selected) {
 		size_t sel = _fs_select(path);
-		if(sel != std::VFS::SELECT_OK)
+		if(sel != std::VFS::OK)
 			return sel;
 	}
 

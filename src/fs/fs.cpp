@@ -20,10 +20,10 @@ std::string std::_fs_selected;
 
 size_t std::_fs_select(const std::string& path) {
 	if(!_resolve())
-		return std::VFS::SELECT_CONNECT_ERROR;
+		return std::VFS::CONNECT_ERROR;
 
 	if(path.size() >= PAGE_SIZE)
-		return std::VFS::SELECT_CONNECT_ERROR;
+		return std::VFS::CONNECT_ERROR;
 
 	std::SMID smid = std::smMake();
 	uint8_t* buffer = (uint8_t*)std::smMap(smid);
@@ -31,8 +31,8 @@ size_t std::_fs_select(const std::string& path) {
 
 	_fs_selected = path;
 	memcpy(buffer, _fs_selected.c_str(), _fs_selected.size());
-	size_t ret = std::rpc(_fs_vfs, std::VFS::SELECT, smid, _fs_selected.size());
-	_fs_isSelected = (ret == std::VFS::SELECT_OK);
+	size_t ret = std::rpc(_fs_vfs, std::VFS::SELECT, smid);
+	_fs_isSelected = (ret == std::VFS::OK);
 
 	std::munmap(buffer);
 	std::smDrop(smid);

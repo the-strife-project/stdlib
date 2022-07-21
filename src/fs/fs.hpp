@@ -8,7 +8,7 @@
 
 namespace std {
 	typedef unordered_set<std::string> FileList;
-	const size_t FS_OK = VFS::SELECT_OK;
+	const size_t FS_OK = VFS::OK;
 
 	// Private-ish
 	extern std::PID _fs_vfs;
@@ -18,7 +18,7 @@ namespace std {
 
 	// Regular
 	inline bool exists(const std::string& path) {
-		return _fs_select(path) == VFS::SELECT_OK;
+		return _fs_select(path) == VFS::OK;
 	}
 
 	std::string simplifyPath(const std::string&);
@@ -29,6 +29,8 @@ namespace std {
 	size_t listFiles(const std::string&, FileList&);
 	size_t readFile(const std::string&, uint8_t*, size_t start, size_t sz);
 	size_t readWholeFile(const std::string&, Buffer&);
+
+	size_t mkdir(const std::string&);
 };
 
 #endif

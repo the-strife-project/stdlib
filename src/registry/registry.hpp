@@ -7,9 +7,9 @@
 namespace std {
 	namespace registry {
 		extern std::PID _pid;
-		extern char* _buffer;
 
-		size_t exists(const std::string& path);
+		size_t exists(std::string& path);
+		bool has(std::PID pid, const std::string& name);
 	};
 };
 

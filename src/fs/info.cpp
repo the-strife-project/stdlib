@@ -5,7 +5,7 @@
 template<bool v> static bool isSomething(const std::string& path) {
 	if(!std::_fs_isSelected || path != std::_fs_selected) {
 		size_t sel = std::_fs_select(path);
-		if(sel != std::VFS::SELECT_OK)
+		if(sel != std::VFS::OK)
 			return false;
 	}
 

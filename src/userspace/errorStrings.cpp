@@ -3,14 +3,20 @@
 const char* std::VFS::errStr(size_t n) {
 	// Shenanigans because of lack of global constructors (TODO)
 	switch(n) {
-	case SELECT_CONNECT_ERROR:
+	case CONNECT_ERROR:
 		return "Connection error";
-	case SELECT_NOT_ALLOWED:
+	case NOT_ALLOWED:
 		return "Permission denied";
-	case SELECT_NOT_FOUND:
+	case NOT_FOUND:
 		return "No such file or directory";
 	case ERROR_READING:
 		return "Read fault";
+	case ALREADY_EXISTS:
+		return "File already exists";
+	case READ_ONLY_FS:
+		return "Filesystem is read-only";
+	case NOT_A_DIRECTORY:
+		return "Not a directory";
 	}
 
 	return "";

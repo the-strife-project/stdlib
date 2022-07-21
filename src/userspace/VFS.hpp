@@ -11,16 +11,19 @@ namespace std {
 			LIST,
 			READ,
 			INFO,
-			MAKE_FILE,
-			MAKE_DIR,
+			MKDIR,
+			MKFILE,
 		};
 
 		enum {
-			SELECT_OK,
-			SELECT_CONNECT_ERROR,
-			SELECT_NOT_ALLOWED,
-			SELECT_NOT_FOUND,
+			OK,
+			CONNECT_ERROR,
+			NOT_ALLOWED,
+			NOT_FOUND,
 			ERROR_READING,
+			ALREADY_EXISTS,
+			READ_ONLY_FS,
+			NOT_A_DIRECTORY,
 			N_ERRORS,
 		};
 

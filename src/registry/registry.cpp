@@ -2,34 +2,50 @@
 #include <rpc>
 #include <shared_memory>
 #include <userspace/registry.hpp>
+#include <cstdio>
 
 std::PID std::registry::_pid = NULL_PID;
-char* std::registry::_buffer = nullptr;
 
-static size_t connect() {
+static size_t _resolve() {
 	if(std::registry::_pid)
-		return std::uregistry::OK;
+		return std::registry::_pid;
+	return std::registry::_pid = std::resolve("registry");
+}
 
-	std::registry::_pid = std::resolve("registry");
-	if(!std::registry::_pid)
+size_t std::registry::exists(std::string& path) {
+	if(path.size() > PAGE_SIZE-1)
+		return std::uregistry::CONNECTION_ERROR;
+
+	std::PID pid = _resolve();
+	if(!pid)
 		return std::uregistry::CONNECTION_ERROR;
 
 	std::SMID smid = std::smMake();
-	std::registry::_buffer = (char*)std::smMap(smid);
-	std::smAllow(smid, std::registry::_pid);
-	return std::rpc(std::registry::_pid, std::uregistry::CONNECT, smid);
+	char* buffer = (char*)std::smMap(smid);
+	std::smAllow(smid, pid);
+
+	memcpy(buffer, path.c_str(), path.size());
+	auto ret = std::rpc(pid, std::uregistry::EXISTS, smid);
+
+	std::munmap(buffer);
+	std::smDrop(smid);
+	return ret;
 }
 
-size_t std::registry::exists(const std::string& path) {
-	size_t ret = connect();
-	if(ret != std::uregistry::OK)
-		return ret;
+bool std::registry::has(std::PID pid, const std::string& name) {
+	auto info = std::info(pid);
+	size_t uid = info.uid;
+	if(!uid)
+		return false;
+	if(uid == 1)
+		return true;
 
-	if(path.size() >= PAGE_SIZE)
-		return std::uregistry::CONNECTION_ERROR;
+	std::string path = "/u/";
+	path += uToStr(uid);
+	path += "/";
+	path += name;
 
-	std::string copy(path);
-	memcpy(_buffer, copy.c_str(), copy.size());
-
-	return std::rpc(_pid, std::uregistry::EXISTS);
+	auto ret = exists(path);
+	// In case of connection error (no registry running), everything is allowed!
+	return ret != std::uregistry::NOT_FOUND;
 }
