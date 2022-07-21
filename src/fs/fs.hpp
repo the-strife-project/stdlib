@@ -23,14 +23,27 @@ namespace std {
 
 	std::string simplifyPath(const std::string&);
 
-	bool isFile(const std::string&);
-	bool isDir(const std::string&);
+	std::VFS::Info getFileInfo(const std::string&);
+	inline bool isFile(const std::string& path) {
+		auto info = getFileInfo(path);
+		if(info.error != FS_OK)
+			return false;
+		return !info.isDirectory;
+	}
+	inline bool isDir(const std::string& path) {
+		auto info = getFileInfo(path);
+		if(info.error != FS_OK)
+			return false;
+		return info.isDirectory;
+	}
 
 	size_t listFiles(const std::string&, FileList&);
 	size_t readFile(const std::string&, uint8_t*, size_t start, size_t sz);
-	size_t readWholeFile(const std::string&, Buffer&);
+	size_t readWholeFile(const std::string&, Buffer&, bool nullTerminated=false);
+	size_t writeFile(const std::string&, char*, size_t start, size_t sz);
 
 	size_t mkdir(const std::string&);
+	size_t mkfile(const std::string&);
 };
 
 #endif

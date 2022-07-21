@@ -10,6 +10,7 @@ namespace std {
 			LIST_SIZE,
 			LIST,
 			READ,
+			WRITE,
 			INFO,
 			MKDIR,
 			MKFILE,
@@ -30,8 +31,12 @@ namespace std {
 		static const char* errStr(size_t);
 
 		struct Info {
-			size_t size;
-			bool isDirectory;
+			size_t error = ERROR_READING;
+			size_t size = 0;
+			bool isDirectory = false;
+
+			Info() = default;
+			inline Info(size_t err) { error = err; }
 		};
 	};
 };
