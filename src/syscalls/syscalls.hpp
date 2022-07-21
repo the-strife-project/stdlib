@@ -47,6 +47,7 @@ namespace std {
 			GET_EXIT_VALUE,
 			WAIT,
 			INFO,
+			SWITCH_USER,
 			// Locks
 			LOCK,
 			WAKE,
@@ -227,6 +228,10 @@ namespace std {
 		Info ret = *(Info*)page;
 		munmap(page);
 		return ret;
+	}
+
+	inline bool sysSwitchUser(PID pid, size_t uid) {
+		return _syscallTwo(Syscalls::SWITCH_USER, pid, uid);
 	}
 
 
