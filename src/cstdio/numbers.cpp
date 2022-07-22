@@ -37,3 +37,17 @@ char* std::_u64ToStr(uint64_t x, char* buffer, size_t fixedSize) {
 
 	return changeSize(buffer, fixedSize, 20); // len(str(1 << 64))
 }
+
+size_t std::strToU(const std::string& str) {
+	size_t ret = 0;
+	for(size_t i=0; i<str.size(); ++i) {
+		char c = str[i];
+		if(c >= '0' && c <= '9') {
+			ret *= 10;
+			ret += c - '0';
+		} else {
+			return 0;
+		}
+	}
+	return ret;
+}

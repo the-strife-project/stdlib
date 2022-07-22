@@ -44,9 +44,14 @@ namespace std {
 		}
 
 		~rc_ptr() {
-			if(!--ptr->count)
-				delete ptr;
-			ptr = nullptr;
+			if(ptr) {
+				(ptr->count)--;
+				if(!ptr->count) {
+					delete ptr->ptr;
+					delete ptr;
+				}
+				ptr = nullptr;
+			}
 		}
 
 		inline T* operator*() { return ptr->ptr; }

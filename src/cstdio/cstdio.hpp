@@ -31,6 +31,7 @@ namespace std {
 		std::string ret(ptr);
 		return ret;
 	}
+	size_t strToU(const std::string&);
 }
 
 #endif

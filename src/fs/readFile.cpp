@@ -29,6 +29,8 @@ size_t std::readFile(const std::string& path, uint8_t* data, size_t start, size_
 
 size_t std::readWholeFile(const std::string& path, std::Buffer& ref, bool nullTerminated) {
 	auto info = std::getFileInfo(path);
+	if(info.error != FS_OK)
+		return info.error;
 	size_t size = info.size;
 
 	uint8_t* raw;
