@@ -3,6 +3,7 @@
 
 #include <userspace/users.hpp>
 #include <string>
+#include <syscalls>
 
 namespace std {
 	extern std::PID _users_pid;
@@ -11,6 +12,8 @@ namespace std {
 	size_t nameToUID(std::string&);
 	size_t howManyUsers();
 	size_t newUser(std::string&);
+
+	inline size_t PIDtoUID(std::PID pid) { return std::info(pid).uid; }
 };
 
 #endif
