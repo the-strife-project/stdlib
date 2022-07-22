@@ -14,6 +14,11 @@ namespace std {
 			INFO,
 			MKDIR,
 			MKFILE,
+			ADD_ACL,
+			ACL_SIZE,
+			GET_ACL,
+			EACL_SIZE,
+			GET_EACL,
 		};
 
 		enum {

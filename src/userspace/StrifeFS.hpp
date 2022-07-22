@@ -10,6 +10,7 @@ namespace std {
 			WRITE,
 			MAKE_DIR,
 			MAKE_FILE,
+			ADD_ACL,
 		};
 	};
 };

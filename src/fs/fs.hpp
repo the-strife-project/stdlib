@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 #include <userspace/VFS.hpp>
 #include <memory>
 
@@ -44,6 +45,24 @@ namespace std {
 
 	size_t mkdir(const std::string&);
 	size_t mkfile(const std::string&);
+
+	struct ACLEntry {
+		union {
+			struct {
+				uint64_t allow : 1;
+				uint64_t isUser : 1;
+				uint64_t read : 1;
+				uint64_t write : 1;
+				uint64_t reserved : 60;
+			};
+			uint64_t raw;
+		};
+	} __attribute__((packed));
+	typedef std::unordered_map<size_t, ACLEntry> ACL;
+
+	size_t addACL(const std::string&, size_t uid, const ACLEntry&);
+	size_t getACL(const std::string&, ACL&);
+	size_t getEACL(const std::string&, ACL&);
 };
 
 #endif
