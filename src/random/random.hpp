@@ -2,9 +2,10 @@
 #define _STDLIB_RANDOM_HPP
 
 #include <types>
+#include <syscalls>
 
 namespace std {
-	// xorshiro256** + splitmix64
+	// xoshiro256** + splitmix64
 	// This is not cryptographically secure, at all
 	class BadRNG {
 	private:
@@ -24,11 +25,8 @@ namespace std {
 
 
 	inline uint64_t rand64() {
-		// TODO: USE KERNEL CSPRNG!
 		uint64_t ret;
-		asm volatile("rdrand %0"
-					 : "=a" (ret)
-					 :: "cc", "memory");
+		std::csprng(&ret, sizeof(uint64_t));
 		return ret;
 	}
 }

@@ -4,7 +4,7 @@ static inline uint64_t rol64(uint64_t x, size_t k) {
 	return (x << k) | (x >> (64 - k));
 }
 
-static uint64_t xorshiro256ss(uint64_t* s) {
+static uint64_t xoshiro256ss(uint64_t* s) {
 	uint64_t ret = rol64(s[1] * 5, 7) * 9;
 	uint64_t t = s[1] << 17;
 
@@ -43,5 +43,5 @@ void std::BadRNG::reset() {
 }
 
 uint64_t std::BadRNG::next() {
-	return xorshiro256ss(state.s);
+	return xoshiro256ss(state.s);
 }

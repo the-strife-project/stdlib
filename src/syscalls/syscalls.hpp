@@ -51,6 +51,8 @@ namespace std {
 			// Locks
 			LOCK,
 			WAKE,
+			// Generic
+			CSPRNG,
 		};
 	};
 
@@ -239,6 +241,13 @@ namespace std {
 	// --- LOCKS ---
 	inline void lockme() { _syscallZero(Syscalls::LOCK); }
 	inline bool wake(std::PID pid) { return _syscallOne(Syscalls::WAKE, pid); }
+
+
+
+	// --- GENERIC ---
+	inline bool csprng(void* buffer, size_t sz) {
+		return _syscallTwo(Syscalls::CSPRNG, (uint64_t)buffer, sz);
+	}
 };
 
 #endif
